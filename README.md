@@ -1,18 +1,15 @@
 # vite-wasm-pack-watcher
 
-A fork of https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher.
+Fork of [mtolmacs/vite-plugin-wasm-pack-watcher](https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher).
 
 A Vite plugin which recompiles your Rust WebAssembly project whenever you modify
 a Rust (\*.rs) file.
 
 ## Usage
 
-1. Add it to your `vite.config.(js|ts)` file and set the `build.watch` parameter
-   to listen for .rs file changes as well:
-
 ```ts
 import { defineConfig } from "vite";
-import wasmPackWatchPlugin from "vite-plugin-wasm-pack-watcher";
+import wasmPackWatchPlugin from "vite-wasm-pack-watcher";
 
 export default defineConfig({
   build: {
@@ -22,9 +19,10 @@ export default defineConfig({
   },
   plugins: [
     wasmPackWatchPlugin({
-      /*
-            buildCommand: "<your custom build command to run, defaults to wasm-pack build --dev>"
-      */
+      // Directory containing Cargo.toml, defaults to project root
+      cwd: "engine",
+      // Command to run in that directory
+      buildCommand: "wasm-pack build --target web",
     }),
   ],
 });
