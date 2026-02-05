@@ -1,4 +1,6 @@
-# vite-plugin-wasm-pack-watcher
+# vite-wasm-pack-watcher
+
+A fork of https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher.
 
 A Vite plugin which recompiles your Rust WebAssembly project whenever you modify
 a Rust (\*.rs) file.

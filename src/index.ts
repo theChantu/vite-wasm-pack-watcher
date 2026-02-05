@@ -1,11 +1,12 @@
 import { ChildProcess, spawn } from "child_process";
-import { PluginOption, WebSocketServer } from "vite";
+import path from "path";
+import type { PluginOption, WebSocketServer } from "vite";
 
 let ws: WebSocketServer | null = null;
 
 const debounce = <Args extends unknown[]>(
   fn: (...args: Args) => void,
-  delay: number
+  delay: number,
 ) => {
   let timer: NodeJS.Timeout | null = null;
 
@@ -20,7 +21,7 @@ const debounce = <Args extends unknown[]>(
   };
 };
 
-const builder = () => {
+const builder = (cwd: string) => {
   let buildProcess: ChildProcess | null = null;
 
   return (buildCommand?: string) => {
@@ -32,7 +33,9 @@ const builder = () => {
     const command = parts?.[0] ?? "wasm-pack";
     const args = parts?.slice(1) ?? ["build", "--dev"];
 
-    buildProcess = spawn(command, args);
+    buildProcess = spawn(command, args, { cwd });
+    if (!buildProcess.stdout || !buildProcess.stderr) return;
+
     buildProcess.stdout.on("data", (data) => {
       console.log(data.toString());
     });
@@ -47,20 +50,32 @@ const builder = () => {
   };
 };
 
-const buildWithWasmPack = debounce(builder(), 100);
-
 export default function wasmPackWatchPlugin(options?: {
   buildCommand?: string;
+  cwd?: string;
 }): PluginOption {
+  const cwd = path.resolve(process.cwd(), options?.cwd ?? ".");
+  const buildWithWasmPack = debounce(builder(cwd), 100);
+
   return {
     name: "wasm-pack-watch",
     watchChange(id) {
-      if (id.endsWith(".rs")) {
+      if (
+        id.endsWith(".rs") ||
+        id.endsWith("Cargo.toml") ||
+        id.includes("Cargo.lock")
+      ) {
         buildWithWasmPack(options?.buildCommand);
       }
     },
     configureServer(server) {
       ws = server.ws;
+
+      server.watcher.add([
+        path.join(cwd, "src/**"),
+        path.join(cwd, "Cargo.toml"),
+        path.join(cwd, "Cargo.lock"),
+      ]);
     },
   };
 }

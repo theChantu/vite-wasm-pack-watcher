@@ -1,15 +1,15 @@
 {
-  "name": "vite-plugin-wasm-pack-watcher",
+  "name": "@theChantu/vite-wasm-pack-watcher",
   "version": "1.0.1",
-  "author": "Mark Tolmacs <mark@lazycat.hu> (https://marktolmacs.com)",
-  "homepage": "https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher",
+  "author": "theChantu",
+  "homepage": "https://github.com/theChantu/vite-wasm-pack-watcher",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher.git"
+    "url": "https://github.com/theChantu/vite-wasm-pack-watcher.git"
   },
   "bugs": {
-    "url": "https://github.com/mtolmacs/vite-plugin-wasm-pack-watcher/issues"
+    "url": "https://github.com/theChantu/vite-wasm-pack-watcher/issues"
   },
   "description": "Watch for Rust file changes and rebuild the project with wasm-pack on changes.",
   "types": "./exports/require.d.cts",
@@ -28,7 +28,7 @@
       "default": "./exports/require.cjs"
     }
   },
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "bun@1.3.8",
   "peerDependencies": {
     "vite": "^2 || ^3 || ^4 || ^5 || ^6"
   },
